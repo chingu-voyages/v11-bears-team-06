@@ -1,0 +1,31 @@
+{
+  "name": "v11-bears-team-06",
+  "version": "1.0.0",
+  "description": "SportsUp - A meetup style clone focused on sports; a site where players can find their chosen sport being played in their location.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "next",
+    "build": "next build",
+    "start": "nodemon server/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chingu-voyages/v11-bears-team-06.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chingu-voyages/v11-bears-team-06/issues"
+  },
+  "homepage": "https://github.com/chingu-voyages/v11-bears-team-06#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "isomorphic-unfetch": "^3.0.0",
+    "mongoose": "^5.6.13",
+    "next": "^9.0.5",
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0"
+  }
+}
