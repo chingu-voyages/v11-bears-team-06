@@ -19,8 +19,13 @@ router.post('/', async (req, res)=> {
             method: 'GET'
         });
         const data = await fetchRes.json();
-        const zipCodes = data.zip_codes.map(addr => addr.zip_code);
-        return res.send(zipCodes);
+        if (data.zip_codes && data.zip_codes.length>0) {
+            const zipCodes = data.zip_codes.map(addr => addr.zip_code);
+            return res.send(zipCodes);
+        } else {
+            res.status(400).send({msg: 'No zip codes found'});
+        }
+        
     } catch(err) {
         res.status(400).send({msg: err});
     }
