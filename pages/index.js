@@ -12,10 +12,14 @@ const Index = (props) => {
 }
 
 Index.getInitialProps = async () => {
-    const res = await fetch('http://localhost:3000/test');
-    const data = await res.json();
-    console.log(data);
-    return data;
+    try {
+        const res = await fetch('http://localhost:3000/test');
+        const data = await res.json();
+        console.log(data);
+        return data;
+    } catch (err) {
+        console.log("Error", err);
+    }
 }   
 
 export default Index;
