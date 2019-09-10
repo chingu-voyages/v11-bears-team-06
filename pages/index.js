@@ -15,15 +15,19 @@ const Index = (props) => {
 }
 
 Index.getInitialProps = async () => {
-    const players_res = await fetch('http://localhost:3000/api/players');
-    const players_data = await players_res.json();
-    
-    const player_res = await fetch('http://localhost:3000/api/players/5d7432911c9d4400009a20eb');
-    const player_data = await player_res.json();
+    try {    
+        const players_res = await fetch('http://localhost:3000/api/players');
+        const players_data = await players_res.json();
+        
+        const player_res = await fetch('http://localhost:3000/api/players/5d7432911c9d4400009a20eb');
+        const player_data = await player_res.json();
 
-    const res = await fetch('http://localhost:3000/test');
-    const data = await res.json();
-    return {msg:data.msg, players:players_data.data, player:player_data.data};
+        const res = await fetch('http://localhost:3000/test');
+        const data = await res.json();
+        return {msg:data.msg, players:players_data.data, player:player_data.data};
+    }catch (err) {
+        console.log("Error", err);
+    }
 }   
 
 export default Index;
