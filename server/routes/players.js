@@ -8,14 +8,11 @@ router.route('/players').post(insertPlayer);
 router.route('/players').put(updatePlayer);
 router.route('/players').delete(deletePlayer);
 
-const playerSchema = new mongoose.Schema({
-  name: String,
-  handle: String
-});
-const Player = mongoose.model('Player', playerSchema);
 
 
 function getPlayers(req, res) {
+  const Player = mongoose.model('Player');
+
   if(req.params.id)
   {
     Player.findById( req.params.id, (err, players) => {
@@ -32,6 +29,8 @@ function getPlayers(req, res) {
 }
 
 function insertPlayer(req, res) {
+  const Player = mongoose.model('Player');
+
   let player = new Player(
     {
         name: req.body.name,
@@ -49,13 +48,17 @@ function insertPlayer(req, res) {
 }
 
 function updatePlayer(req, res) {
-  Player.findByIdAndUpdate(req.params.id, {$set: req.body}, function (err, product) {
+  const Player = mongoose.model('Player');
+
+  Player.findByIdAndUpdate(req.params.id, {$set: req.body}, function (err, player) {
     res.send('Player updated successfully');
   });
 }
 
 function deletePlayer(req, res) {
-  Product.findByIdAndRemove(req.params.id, function (err) {
+  const Player = mongoose.model('Player');
+
+  Player.findByIdAndRemove(req.params.id, function (err) {
     res.send('Player deleted successfully');
   });
 }
