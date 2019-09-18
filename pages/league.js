@@ -11,12 +11,12 @@ const League = (props) => {
     )
 }
 
-League.getInitialProps = async () => {
+League.getInitialProps = async ({query}) => {
     try {    
         //TODO get league id from url
         //could I get league from db via model?
 
-        const league_res = await fetch('http://localhost:3000/api/league/5d7432911c9d4400009a20eb');
+        const league_res = await fetch(`http://localhost:3000/api/league/${query.id}`);
         const league_data = await league_res.json();
 
         return {league:league_data.data};
