@@ -6,8 +6,15 @@ import './styles.scss';
 
 
 
+// just a boring list of links to items
+// depends on each item from db has an id and a name property
 const Collection = (props) => {
-    return props[props.collection].map(e => <div><Link href={`/${props.route}?id=${e._id}`}><a>{e.name}</a></Link></div>)
+    return props[props.collection].map(e => <div key={e._id}>
+      <Link  href={`/${props.route}?id=${e._id}&edit=1`}><a className="Collection-edit-link">edit</a></Link>
+      <Link href={`/${props.route}?id=${e._id}`}><a>{e.name}</a></Link>
+      <Link  href={`/api/${props.route}s/delete/${e._id}`}><a className="Collection-delete-link">delete</a></Link>
+      </div>
+      )
 }
 
 
@@ -25,7 +32,6 @@ const Index = (props) => {
             <Collection {...props} collection="players" route="player"/>
             <h2>Messages</h2>
             {props.msg ? <p>This msg is from the backend: {props.msg}</p> : ''}
-
         </div>
     )
 }

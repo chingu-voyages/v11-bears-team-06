@@ -5,10 +5,11 @@ const fetch = require('isomorphic-unfetch');
 const mongoose = require('mongoose')
 
 router.route('/venues').get(getVenues);
-router.route('/venues/:id').get(getVenues);
 router.route('/venues').post(insertVenue);
-router.route('/venues').put(updateVenue);
-router.route('/venues').delete(deleteVenue);
+router.route('/venues/:id').get(getVenues);
+router.route('/venues/:id').put(updateVenue);
+router.route('/venues/:id').delete(deleteVenue);
+router.route('/venues/delete/:id').get(deleteVenue);
 
 function getVenues(req, res) {
   const Venue = mongoose.model('Venue');
@@ -20,7 +21,9 @@ function getVenues(req, res) {
       res.status(200).json({ data: venue });      
     });
   }else
-    Venue.find( (err, venues) => {
+    Venue.find()
+    .sort('name')
+    .exec( (err, venues) => {
       if (err) return console.error(err);
       console.log(venues);
       res.status(200).json({ data: venues });
@@ -28,9 +31,10 @@ function getVenues(req, res) {
 }
 
 function insertVenue(req, res) {
+  
   const Venue = mongoose.model('Venue');
 
-  let Venue = new Venue(
+  let newVenue = new Venue(
     {
         name: req.body.name,
         street: req.body.street,
@@ -46,7 +50,7 @@ function insertVenue(req, res) {
     }
   );
 
-  Venue.save(function (err) {
+  newVenue.save(function (err) {
       if (err) {
           return next(err);
       }

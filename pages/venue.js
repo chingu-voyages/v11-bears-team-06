@@ -44,21 +44,58 @@ class VenueForm extends React.Component {
       this.state = {...props.venue};
   
       this.handleChange = this.handleChange.bind(this);
-      this.handleSubmit = this.handleSubmit.bind(this);
+      this.handleSave = this.handleSave.bind(this);
+      this.handleInsert = this.handleInsert.bind(this);
     }
   
     handleChange(event) {
       this.setState({[event.target.name]: event.target.value});
     }
   
-    handleSubmit(event) {
+    handleSave(event) {
       alert('A venue was submitted: ' + this.state.name);
+
+      if(this.state._id){ //update
+        fetch(`http://localhost:3000/api/venues/${this.state._id}`,{
+          method: 'PUT', // *GET, POST, PUT, DELETE, etc.
+          headers: {
+              'Content-Type': 'application/json',
+              // 'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: JSON.stringify(this.state), // body data type must match "Content-Type" header
+      })
+      .then(response => response.json());
+      }else{ //insert
+        
+          fetch(`http://localhost:3000/api/venues`,{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(this.state), // body data type must match "Content-Type" header
+        })
+        .then(response => response.json());
+      }
       event.preventDefault();
     }
   
+    handleInsert() {
+      alert('A venue was created: ' + this.state.name);
+
+      fetch(`http://localhost:3000/api/venues`,{
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(this.state), // body data type must match "Content-Type" header
+      })
+      .then(response => response.json());
+      
+    }
+
     render() {
       return (
-        <form onSubmit={this.handleSubmit}>
+        <form onSubmit={this.handleSave}>
 
         <div className="venue-card">
             <div className="photo-drop">drop photo here
@@ -107,7 +144,8 @@ class VenueForm extends React.Component {
             </label>
             
 
-            <input type="submit" value="New Venue" />
+            <input type="submit" value="Save" />
+            <button onClick={()=>this.handleInsert()}>New Venue</button>
           </div>
 
         </form>
@@ -124,6 +162,8 @@ const Venue = (props) => {
         return <VenueCard {...props}/>
 }
 
+// query param is an object that has the values from url param
+//i.e. {edit:1} from  /api/venues/xxx?edit=1
 Venue.getInitialProps = async ({query}) => {
     try {
       let venue_data;

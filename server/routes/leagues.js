@@ -4,11 +4,12 @@ const router = Router();
 const fetch = require('isomorphic-unfetch');
 const mongoose = require('mongoose')
 
-router.route('/leagues').get(getleagues);
-router.route('/leagues/:id').get(getleagues);
-router.route('/leagues').post(insertLeague);
-router.route('/leagues').put(updateLeague);
-router.route('/leagues').delete(deleteLeague);
+router.route('/leagues').get(getleagues); //get all
+router.route('/leagues').post(insertLeague); //insert one
+router.route('/leagues/:id').get(getleagues); //get one by id
+router.route('/leagues/:id').put(updateLeague); //mutate one by id
+router.route('/leagues/:id').delete(deleteLeague); //delete one by id
+router.route('/leagues/delete/:id').get(deleteLeague);
 
 
 /*  Route:      /leagues
@@ -41,17 +42,18 @@ router.post('/', async (req, res)=> {
 function getleagues(req, res) {
   const League = mongoose.model('League');
 
-  if(req.params.id)
-  {
-    League.findById( req.params.id, (err, league) => {
+  if(req.params.id){
+    League.findById( req.params.id)
+    .then((err, league) => {
       if (err) return console.error(err);
       //the schema sets a relationship between league and players.
       //populate will load the related players into the League object
       League.populate(league, { path: 'members' }).then( l => res.status(200).json({ data: l }) );
-      
     });
-  }else
-    League.find( (err, leagues) => {
+  } else
+    League.find()
+    .sort('name')
+    .exec((err, leagues) => {
       if (err) return console.error(err);
       console.log(leagues);
       res.status(200).json({ data: leagues });
@@ -61,35 +63,35 @@ function getleagues(req, res) {
 function insertLeague(req, res) {
     const League = mongoose.model('League');
 
-  let League = new League(
+  let newLeague = new League(
     {
-        name: req.body.name,
-        street: req.body.name,
-        city: req.body.name,
-        state: req.body.name,
-        zip: req.body.name
+      name: req.body.name,
+      street: req.body.name,
+      city: req.body.name,
+      state: req.body.name,
+      zip: req.body.name
     }
   );
 
-  League.save(function (err) {
-      if (err) {
-          return next(err);
-      }
-      res.send('League Created successfully')
+  newLeague.save(function (err) {
+    if (err) {
+      return next(err);
+    }
+    res.send('League Created successfully')
   });
 
 }
 
 function updateLeague(req, res) {
-    const League = mongoose.model('League');
+  const League = mongoose.model('League');
   League.findByIdAndUpdate(req.params.id, {$set: req.body}, function (err, league) {
     res.send('League updated successfully');
   });
 }
 
 function deleteLeague(req, res) {
-    const League = mongoose.model('League');
-    League.findByIdAndRemove(req.params.id, function (err) {
+  const League = mongoose.model('League');
+  League.findByIdAndRemove(req.params.id, function (err) {
     res.send('League deleted successfully');
   });
 }
